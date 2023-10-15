@@ -1,0 +1,49 @@
+version: "3"
+services:
+
+  postgres:
+      image: postgres:13
+      environment:
+        DATABASE_URL: <%= ENV['DATABASE_URL'] %>
+        POSTGRES_DB: authentication-development
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: mynewpassword2
+      ports:
+        - "5433:5432"
+
+  #fuminuri-auth-app:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  volumes:
+  ##    - .:/app
+  #  ports:
+  #    - "9292:9292"
+  #  depends_on:
+  #    - postgres
+
+  # Jaeger
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686"
+      - "14268"
+      - "14250"
+
+  # Zipkin
+  zipkin-all-in-one:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+
+  # Collector
+  otel-collector:
+    image: ${OTELCOL_IMG}
+    command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4318:4318"        # OTLP HTTP Exporter in opentelemetry-ruby is set to 4317 by default
+    depends_on:
+      - jaeger-all-in-one
+      - zipkin-all-in-one
