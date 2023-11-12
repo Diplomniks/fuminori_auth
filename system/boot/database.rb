@@ -13,6 +13,7 @@ Application.boot(:database) do |container|
   start do
     # Delete DATABASE_URL from the environment, so it isn't accidently passed to subprocesses.
     database = Sequel.connect('postgres:///authentication-development')
+    #DB = Sequel.connect(adapter: 'postgres', host: '/var/run/postgresql', database: 'authentication-development', user: 'postgres', password: 'mynewpassword2')
 
     # Register database component.
     container.register(:database, database)

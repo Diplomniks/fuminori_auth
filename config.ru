@@ -4,6 +4,7 @@
 
 require_relative 'app'
 
+
 # Enable Rack::Attack
 use Rack::Attack
 
@@ -19,3 +20,4 @@ end
 
 # Rack::URLMap takes a hash mapping urls or paths to apps, and dispatches accordingly.
 run Rack::URLMap.new('/' => App.freeze.app, '/sidekiq' => Sidekiq::Web)
+

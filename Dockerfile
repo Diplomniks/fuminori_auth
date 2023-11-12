@@ -5,10 +5,6 @@ RUN apt-get update && apt-get install -y \
     libsqlite3-dev \
     postgresql-client
 
-#RUN useradd -u 1000 -m postgres
-
-
-#RUN echo "postgres:x:9999:9999:PostgreSQL User:/var/lib/postgresql:/bin/bash" >> /etc/passwd
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
@@ -22,10 +18,10 @@ COPY . .
 EXPOSE 9292
 
 # Add a script to be executed every time the container starts.
-COPY docker-entrypoint.sh /usr/bin/env
-RUN chmod +x /usr/bin/env
-ENTRYPOINT ["docker-entrypoint.sh"]
+#COPY docker-entrypoint.sh /usr/bin/env
+#RUN chmod +x /usr/bin/env
+#ENTRYPOINT ["docker-entrypoint.sh"]
 
-USER postgres
+#USER postgres
 
 CMD ["ruby", "app.rb"]
